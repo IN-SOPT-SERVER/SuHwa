@@ -1,7 +1,7 @@
 //파트워 소개 코드만들기
 
 // 서버 파트원 2~3명 소개하는 객체 만들기
-interface Member{
+interface Member2{
     name : string,
     age : number,
     address : string,
@@ -10,7 +10,8 @@ interface Member{
     univ:string,
     MBTI:string,
 }
-const members:Member[]=[
+
+const members:Member2[]=[
     {
         name:'박수린',
         age:21,
@@ -40,7 +41,7 @@ const members:Member[]=[
 
     console.log('두구두구~~~ 저희 줄의 소개를 시작하겠습니다!!! ');
     
-    members.map((person:Member):void=>{
+    members.map((person:Member2):void=>{
         console.log();
         console.log(`안녕하세요 저는 ${person.name}입니다.`);
         console.log(`${person.age}살이고요, MBTI는 ${person.MBTI}에요. 짐작하셨다고요? OK~`);
