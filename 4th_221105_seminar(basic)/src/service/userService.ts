@@ -15,13 +15,42 @@ const createUser = async ( name : string , email : string, age : number) => {
     return data;
 };
 
-const getUserById = async () => {};
+const getUserById = async (userId : number) => {
+    const data = await prisma.user.findUnique({
+        where : {
+            id : userId
+        }
+    });
 
-const getAllUser = async () => {};
+    return data;
+};
 
-const updateUser = async () => {};
+const getAllUser = async () => {
+    const data = await prisma.user.findMany();
+    return data;
+};
 
-const deleteUser = async () => {};
+const updateUser = async ( userId : number, username : string) => {
+    const data = await prisma.user.update({
+        where:{
+            id : userId
+        },
+        data : {
+            userName : username
+        }
+    });
+
+    return data;
+};
+
+const deleteUser = async ( userId : number) => {
+    const data = await prisma.user.delete({
+        where : {
+            id : userId
+        }
+    });
+
+};
 
 const userService = {
     createUser,
