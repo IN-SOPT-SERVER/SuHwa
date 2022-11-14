@@ -40,12 +40,24 @@ const createMedia = async ( mediaInfo : detailInter ) => {
 //R
 // 전체 미디어 목록 조회
 const getAllMedia = async () => {
+    const data = await prisma.media.findMany();
+    return data;
 //유저의 시청기록도 조회
 }
 
 // 미디어 목록 하나조회 - detail
-const getMediaDetail = async () => {
-    //해당 아이디의 데이터가 없는경우
+const getMediaDetail = async (mediaId : number) => {
+    const data = await prisma.media.findUnique({
+        where:{
+            id : mediaId
+        }
+    })
+    .catch(error =>{
+        return error
+    });
+
+    return data;
+    
 //유저의 시청기록도 조회
 }
 
@@ -69,12 +81,24 @@ const updateMedia= async(mediaInfo : detailInter, mediaId : number)=>{
         }
     })
     .catch(error => { return error});
-    
+
     return data;
 };
 
 // D : 미디어 정보 삭제
-const deleteMedia= async()=>{}
+const deleteMedia= async( mediaId:number )=>{
+    const data = await prisma.media.delete({
+        where :{
+            id : mediaId
+        }
+
+    }).catch(error => {
+        return error;
+    })
+
+    return data;
+    
+}
 
 
 
