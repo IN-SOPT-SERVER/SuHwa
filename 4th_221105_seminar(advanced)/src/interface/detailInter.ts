@@ -1,7 +1,7 @@
 export interface detailInter{
     title: string,
     mediaInfo : {
-        thumbnail : string,
+        thumbnail ?: string,
         length : number,
         quality : string,
         seriesNum : number,
@@ -9,12 +9,12 @@ export interface detailInter{
     },
     contentInfo : {
         createYear: number,
-        actors : string[],
-        genre : string[],
+        actors : string,
+        genre : string,
         character : string,
         summary : string
 	},
-    userInfo : {
+    userInfo ? : {
         currentTime : number,
         isLike : boolean
     }
