@@ -4,6 +4,7 @@ import { userService } from "../service";
 import sc from "../constants/statusCode";
 import { validationResult } from "express-validator";
 import { UserCreateDTO } from "../interfaces/UserCreateDTO"; 
+import { UserSignInDTO } from '../interfaces/UserSignInDTO';
 import jwtHandler from '../modules/jwtHandler';
 import rm from "../constants/responseMessage";
 
@@ -145,12 +146,49 @@ const deleteUser = async ( req : Request, res : Response) => {
 
 };
 
+
+//* 로그인
+const signInUser = async (req: Request, res: Response) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST));
+    }
+  
+    const userSignInDto: UserSignInDTO = req.body;
+  
+    try {
+      const data = await userService.signIn(userSignInDto);
+  
+      if (!data) return res.status(sc.NOT_FOUND).send(fail(sc.NOT_FOUND, rm.NOT_FOUND));
+      else if (data === sc.UNAUTHORIZED)
+        return res.status(sc.UNAUTHORIZED).send(fail(sc.UNAUTHORIZED, rm.INVALID_PASSWORD));
+  
+      const accessToken = jwtHandler.sign(data.id);
+  
+      const result = {
+        id: data.id,
+        accessToken,
+      };
+  
+      res.status(sc.OK).send(success(sc.OK, rm.SIGNUP_SUCCESS, result));
+    } catch (e) {
+      console.log(error);
+      //? 서버 내부에서 오류 발생
+      res.status(sc.INTERNAL_SERVER_ERROR).send(fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
+    }
+  };
+
+
+
+
+
 const userController={
     createUser,
     getUserById,
     getAllUser,
     updateUser,
     deleteUser,
+    signInUser
 };
 
 export default userController;
