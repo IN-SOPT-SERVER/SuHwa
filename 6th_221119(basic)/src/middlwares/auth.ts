@@ -28,7 +28,8 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     //? 얻어낸 userId 를 Request Body 내 userId 필드에 담고, 다음 미들웨어로 넘김( next() )
     req.body.userId = userId;
-    //??? 근데 req.body의 필드를 지금 하나 만드는건가?????? 아님 클라가 레큐보낼떄 이미 필드가 있던거?
+    //근데 req.body의 필드를 지금 하나 만드는 생성하는 것 -> 왜????a
+    
     next();
   } catch (error) {
     console.log(error);

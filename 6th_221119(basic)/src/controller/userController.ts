@@ -157,20 +157,20 @@ const signInUser = async (req: Request, res: Response) => {
     const userSignInDto: UserSignInDTO = req.body;
   
     try {
-      const data = await userService.signIn(userSignInDto);
+      const userId = await userService.signIn(userSignInDto);
   
-      if (!data) return res.status(sc.NOT_FOUND).send(fail(sc.NOT_FOUND, rm.NOT_FOUND));
-      else if (data === sc.UNAUTHORIZED)
+      if (!userId) return res.status(sc.NOT_FOUND).send(fail(sc.NOT_FOUND, rm.NOT_FOUND));
+      else if (userId === sc.UNAUTHORIZED)
         return res.status(sc.UNAUTHORIZED).send(fail(sc.UNAUTHORIZED, rm.INVALID_PASSWORD));
   
-      const accessToken = jwtHandler.sign(data.id);
+      const accessToken = jwtHandler.sign(userId);
   
       const result = {
-        id: data.id,
+        id: userId,
         accessToken,
       };
   
-      res.status(sc.OK).send(success(sc.OK, rm.SIGNUP_SUCCESS, result));
+      res.status(sc.OK).send(success(sc.OK, rm.SIGNIN_SUCCESS, result));
     } catch (e) {
       console.log(error);
       //? 서버 내부에서 오류 발생

@@ -13,7 +13,7 @@ const sign = (userId: number) => {
   return accessToken;
 };
 
-//* token 검사!
+//* token 검사! : 우리가 발급한 토큰이 맞는지?
 const verify = (token: string) => {
   let decoded: string | jwt.JwtPayload;
 
