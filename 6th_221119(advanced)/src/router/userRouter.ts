@@ -9,6 +9,7 @@ userRouter.post("/signup",[
     body("name").notEmpty(),
     body("email").notEmpty(),
     body("email").isEmail(),
+    body("age").notEmpty,
     body("age").isNumeric,
     body("password").notEmpty()
 ],userController.createUser);
