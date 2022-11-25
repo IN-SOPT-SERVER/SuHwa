@@ -27,8 +27,10 @@ userRouter.get("/", auth, userController.getAllUser);
 //한명씩 조회
 userRouter.get("/:userId", auth, userController.getUserById);
 
+
+
 //U
-userRouter.patch("/:userId", userController.updateUser);
+userRouter.patch("/:userId", auth , [ body("password").isLength({min : 6}) ] ,userController.updateUser);
 
 //D
 userRouter.delete("/:userId", userController.deleteUser);

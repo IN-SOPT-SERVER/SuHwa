@@ -1,3 +1,4 @@
+import { UserUpdateDTO } from './../interfaces/UserUpdateDTO';
 import { fail, success } from './../constants/response';
 import { Request, Response } from "express";
 import { userService } from "../service";
@@ -76,31 +77,39 @@ const getAllUser = async ( req : Request, res : Response) => {
 };
 
 const updateUser = async ( req : Request, res : Response) => {
-    const { userId } = req.params;
-    const { username } = req.body;
+    const error = validationResult(req);
+    if(!error.isEmpty()) 
+      return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST))
 
-    if (!username){
-        return res.status(400).json({
-            status : 400,
-            message : "유저 업데이트 실패"
-        });
+      
+    const { userId } = req.params;
+    const userUpdateDto : UserUpdateDTO = req.body;
+
+    if(req.body?.name){
+        userUpdateDto.userName=req.body?.name;
+    }
+
+    if(!userUpdateDto.userName && !userUpdateDto.age && !userUpdateDto.email && !userUpdateDto.password){
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.NO_UPDATE_CONTENT));
+    }
+
+    try{
+        const updatedUser = await userService.updateUser(+userId, userUpdateDto);
+        if(!updatedUser){
+            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));       
+        }
+        else{
+            return res.status(sc.OK).send(success(sc.OK,rm.UPDATE_USER_SUCCESS,updatedUser));
+        }
+
+
+    }catch(error){
+        console.log(error);
+        res.status(sc.INTERNAL_SERVER_ERROR).send(fail(sc.INTERNAL_SERVER_ERROR, rm.INTERNAL_SERVER_ERROR));
     }
     
-    const updatedUser = await userService.updateUser(+userId, username);
 
-    if(!updatedUser){
-        return res.status(400).json({
-            status : 400,
-            message : "유저 업데이트 실패"
-        });
-    }
-    else{
-        return res.status(200).json({
-            status : 200,
-            message : "유저 업데이트 성공",
-            updatedUser
-        });
-    }
+    
 
 };
 

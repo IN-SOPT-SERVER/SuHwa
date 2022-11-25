@@ -32,5 +32,6 @@ export default {
 
     
     INVALID_PASSWORD: "잘못된 비밀번호입니다.",
+    NO_UPDATE_CONTENT: "업데이트할 정보가 없습니다"
 
   };

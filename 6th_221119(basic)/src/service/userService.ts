@@ -1,3 +1,4 @@
+import { UserUpdateDTO } from './../interfaces/UserUpdateDTO';
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { sc } from "../constants";
@@ -42,13 +43,26 @@ const getAllUser = async () => {
     return data;
 };
 
-const updateUser = async ( userId : number, username : string) => {
+const updateUser = async ( userId : number, userUpdateDto : UserUpdateDTO) => {
+
+  const encodedUserUpdateDto : UserUpdateDTO={
+    userName : userUpdateDto.userName,
+    age : userUpdateDto.age,
+    email : userUpdateDto.email
+  }
+
+  if(userUpdateDto?.password){//비밀번호를 수정하면 암호화 필요
+    const salt = await bcrypt.genSalt(10); 
+    const password = await bcrypt.hash(userUpdateDto.password, salt);
+    encodedUserUpdateDto.password=password
+  }
+
     const data = await prisma.user.update({
         where:{
             id : userId
         },
         data : {
-            userName : username
+            ...encodedUserUpdateDto,
         }
     });
 
