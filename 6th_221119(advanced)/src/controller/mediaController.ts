@@ -1,8 +1,9 @@
-import { MediaCreateDTO, MediaUpdateDTO } from '../interface/MediaDTO';
+import { MediaCreateDTO, MediaUpdateDTO } from '../interface/media/MediaDTO';
 import { Request, Response } from "express";
 import { mediaService } from "../service";
-import { Prisma, PrismaClient } from "@prisma/client";
-
+import { sc, rm} from '../constants';
+import { fail,success } from '../constants/response';
+import { Prisma } from '@prisma/client';
 //CRUD
 
 
@@ -16,10 +17,7 @@ const createMedia = async (req : Request, res : Response) => {
     if ( !title || !length || !quality 
         || !seriesNum || ! actors || !createYear 
         || !age || !genre || !character || !summary){
-            return res.status(400).json({
-                status : 400,
-                message : "컨텐츠를 추가하기위한 정보가 부족하다."
-            })
+            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.NULL_VALUE));
 
     }
 
@@ -45,17 +43,11 @@ const createMedia = async (req : Request, res : Response) => {
     //예외 2 : 같은 이름의 컨텐츠가 있음
 
     if (!createdMedia || createdMedia instanceof Prisma.PrismaClientKnownRequestError){
-        return res.status(409).json({
-            status : 409,
-            message : `해당 ${title} 컨텐츠는 이미 존재합니다.`
-        }); 
+        return res.status(sc.CONFLICT).send(fail(sc.CONFLICT,rm.ALREADY_MEDIA));
     }
     //성공 : 잘 만들어짐
-    return res.status(201).json({
-        status : 200,
-        message : "만들기ok",
-        data : createdMedia
-    })
+    return res.status(sc.CREATED).send(success(sc.CREATED,rm.CREATE_MEDIA_SUCCESS,createdMedia));
+    
 }
 
 //R
@@ -63,11 +55,7 @@ const createMedia = async (req : Request, res : Response) => {
 const getAllMedia = async (req : Request, res : Response) => {
     const mediaList = await mediaService.getAllMedia();
 
-    return res.status(200).json({
-        status : 200,
-        message : "전체조회ok",
-        data : mediaList
-    })
+    return res.status(sc.OK).send(success(sc.OK,rm.READ_MEDIA_SUCCESS,mediaList));
 
 }
 
@@ -77,26 +65,17 @@ const getMediaDetail = async (req : Request, res : Response) => {
     
     // 예외 1. 미디어 아이디 오류
     if (!mediaId || isNaN(+mediaId)){
-        return res.status(400).json({
-            status : 400,
-            message : `${mediaId}는 유요한 아이디가 아닙니다.`
-        })
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));
+
     }
 
     const mediaDetail = await mediaService.getMediaDetail(+mediaId);
 
     //예외 2. 해당 미디어 아이디가 없는경우
     if (!mediaDetail || mediaDetail instanceof Prisma.PrismaClientKnownRequestError){
-        return res.status(400).json({
-            status : 400,
-            message : `조회 실패 : 아이디 ${mediaId}의 데이터가 없습니다.`,
-        })
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.NULL_VALUE));
     }
-    return res.status(400).json({
-        status : 400,
-        message : `${mediaId}하나조회ok`,
-        data : mediaDetail
-    })
+    return res.status(sc.OK).send(success(sc.OK,rm.READ_MEDIA_SUCCESS,mediaDetail));
 
 }
 
@@ -108,10 +87,8 @@ const updateMedia = async (req : Request, res : Response) => {
     
     // 예외 1. 미디어 아이디 오류
     if (!mediaId || isNaN(+mediaId)){
-        return res.status(400).json({
-            status : 400,
-            message : `${mediaId}는 유요한 아이디가 아닙니다.`
-        })
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));
+
     }
 
     
@@ -119,16 +96,10 @@ const updateMedia = async (req : Request, res : Response) => {
 
     //예외2 : 해당 미디어 아이디의 데이터가 없는경우
     if (!updatedMedia || updatedMedia instanceof Prisma.PrismaClientKnownRequestError){
-        return res.status(400).json({
-            status : 400,
-            message : `업데이트실패 : 아이디 ${mediaId}의 데이터가 없습니다.`,
-        })
+        return res.status(sc.NO_CONTENT).send(fail(sc.NO_CONTENT,rm.MEDIA_NOT_FOUND));
+
     }
-    return res.status(200).json({
-        status : 200,
-        message : `아이디 ${mediaId } 업데이트ok`,
-        data : updatedMedia
-    })
+    return res.status(sc.OK).send(success(sc.OK,rm.UPDATE_MEDIA_SUCCESS,updatedMedia));
 
 }
 
@@ -138,10 +109,7 @@ const deleteMedia = async (req : Request, res : Response) => {
 
     //미디어 아이디 오류
     if (!mediaId || isNaN(+mediaId) ){
-        return res.status(400).json({
-            status : 400,
-            message : `삭제 실패 : 아이디 ${mediaId}가 유효하지 않습니다.`,
-        })
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));
 
     } 
     
@@ -149,17 +117,11 @@ const deleteMedia = async (req : Request, res : Response) => {
     
     //미디어 삭제할 데이터가 없을때
     if(!deletedMedia || deletedMedia instanceof Prisma.PrismaClientKnownRequestError ){
-        return res.status(400).json({
-            status : 400,
-            message : `삭제 실패 : 아이디 ${mediaId}의 데이터가 없습니다.`,
-        }); 
+        return res.status(sc.NO_CONTENT).send(fail(sc.NO_CONTENT,rm.MEDIA_NOT_FOUND));
+
     }
     else{
-        return res.status(200).json({
-            status : 200,
-            message : `${mediaId}삭제ok`,
-            data : deletedMedia
-        });
+        return res.status(sc.OK).send(success(sc.OK,rm.DELETE_MEDIA_SUCCESS));
     }
 
 

@@ -18,6 +18,16 @@ export default {
     DELETE_USER_SUCCESS: "유저 탈퇴 성공",
     DELETE_USER_FAIL: "유저 탈퇴 실패",
     NO_USER: "탈퇴했거나 가입하지 않은 유저입니다.",
+
+    //미디어
+    ALREADY_MEDIA : "이미 존재하는 미디어입니다.",
+    CREATE_MEDIA_SUCCESS : "미디어 생성 성공",
+    CREATE_MEDIA_FAIL : "미디어 생성 실패",
+    READ_MEDIA_SUCCESS: "미디어 조회 성공",
+    MEDIA_NOT_FOUND : "미디어가 존재하지 않습니다.",
+    UPDATE_MEDIA_SUCCESS : "미디어 업데이트 성공",
+    DELETE_MEDIA_SUCCESS : " 미디어 삭제 성공",
+
   
     // 토큰
     CREATE_TOKEN_SUCCESS: "토큰 재발급 성공",

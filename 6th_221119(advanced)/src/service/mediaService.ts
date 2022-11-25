@@ -1,4 +1,4 @@
-import { MediaCreateDTO, MediaUpdateDTO } from "../interface/MediaDTO";
+import { MediaCreateDTO, MediaUpdateDTO } from "../interface/media/MediaDTO";
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()

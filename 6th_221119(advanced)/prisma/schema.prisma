@@ -36,7 +36,8 @@ model User {
   id           Int            @id @unique @default(autoincrement())
   userName     String
   age          Int            @default(5)
-  email        String?        @db.VarChar(400)
+  email        String         @db.VarChar(400)
+  password     String         @db.VarChar(400)
   Like         Like[]
   current_time current_time[]
 }
