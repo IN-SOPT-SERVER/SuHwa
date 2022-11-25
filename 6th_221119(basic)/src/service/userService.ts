@@ -7,26 +7,13 @@ import { UserSignInDTO } from "../interfaces/UserSignInDTO";
 const prisma = new PrismaClient();
 
 
-/*
-const createUser = async ( name : string , email : string, age : number) => {
-    const data = await prisma.user.create({
-        data : {
-            userName : name,
-            age : age,
-            email : email
-
-        },
-    });
-
-    return data;
-};
-*/
 
 const createUser = async (userCreateDto: UserCreateDTO) => {
     //? 넘겨받은 password를 bcrypt의 도움을 받아 암호화
     const salt = await bcrypt.genSalt(10); //^ 매우 작은 임의의 랜덤 텍스트 salt
     const password = await bcrypt.hash(userCreateDto.password, salt); //^ 위에서 랜덤을 생성한 salt를 이용해 암호화
   
+    //왜 어떤건 ?가 붙고 어떤건 ?가 안붙는 거지?
     const data = await prisma.user.create({
       data: {
         userName: userCreateDto?.name,

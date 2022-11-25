@@ -1,3 +1,5 @@
+//modules : 사소한 도움을 주는 함수들을 모아두는 공간
+
 // src/modules/jwtHandler.ts
 import jwt from "jsonwebtoken";
 import { tokenType } from "../constants";

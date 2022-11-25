@@ -8,42 +8,13 @@ import { UserSignInDTO } from '../interfaces/UserSignInDTO';
 import jwtHandler from '../modules/jwtHandler';
 import rm from "../constants/responseMessage";
 
-/*
-const createUser = async ( req : Request, res : Response) => {
-    const { userName, email, age } = req.body;
 
-    if (!userName || !age){
-        return res.status(400).json({
-            status : 400,
-            message : "유저 생성 실패 : 유저이름 또는 나이가 없습니다."
-        });
-    }
-
-    if( !email){
-        (email as string) = "email없음";
-    }
-    const data = await userService.createUser(userName, email, age);
-
-    if (!data){
-        return res.status(400).json({
-            status : 400,
-            message : "유저 생성 실패 "
-        });
-    }
-    else{
-        return res.status(201).json({
-            status : 201,
-            message : "유저생성성공",
-            data : data,
-        });
-    }
-};
-*/
 
 const createUser = async (req: Request, res: Response) => {
 
     //? validation의 결과를 바탕으로 분기 처리
     const error = validationResult(req);
+    
     if(!error.isEmpty()) 
       return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST))
   
@@ -67,7 +38,7 @@ const createUser = async (req: Request, res: Response) => {
 
 
 
-    return res.status(sc.CREATED).send(success(sc.CREATED, rm.SIGNUP_SUCCESS, data))
+    return res.status(sc.CREATED).send(success(sc.CREATED, rm.SIGNUP_SUCCESS, result))
   };
 
 const getUserById = async ( req : Request, res : Response) => {
@@ -150,6 +121,7 @@ const deleteUser = async ( req : Request, res : Response) => {
 //* 로그인
 const signInUser = async (req: Request, res: Response) => {
     const error = validationResult(req);
+    
     if (!error.isEmpty()) {
       return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST));
     }

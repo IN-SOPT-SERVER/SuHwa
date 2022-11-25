@@ -7,17 +7,26 @@ const userRouter : Router = Router();
 
 //CRUD
 //C
-userRouter.post("/", userController.createUser);
-
 //* 유저 생성 - POST api/user //회원가입
 userRouter.post(
-    "/",
-    [body("name").notEmpty(), body("email").notEmpty(), body("password").isLength({ min: 6 })],
+    "/"
+    ,[
+      body("name").notEmpty(),
+      body("email").notEmpty(),
+      body("email").isEmail(),
+      body("password").notEmpty(),
+      body("password").isLength({ min: 6 })
+    ],
     userController.createUser
   );
-
-
-
+/*
+  [
+    body("email").notEmpty(),
+    body("email").isEmail(),
+    body("password").notEmpty(),
+    body("password").isLength({ min: 6 }),
+  ],
+*/
 //R
 //전체조회
 userRouter.get("/", userController.getAllUser);
