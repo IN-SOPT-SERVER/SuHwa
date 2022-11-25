@@ -45,6 +45,10 @@ const createUser = async (req: Request, res: Response) => {
 const getUserById = async ( req : Request, res : Response) => {
     const { userId } = req.params;
 
+    // auth 미들웨어에서 해석한 토큰의 아이디와 현재 조회하려하는 토큰 아이디가 다를때
+    if(req.body.userId!=userId){
+        return res.status(sc.UNAUTHORIZED).send(fail(sc.UNAUTHORIZED,rm.DIFFERENT_USER))
+    }
     const data = await userService.getUserById(+userId);
 
     if(!data){
@@ -77,22 +81,28 @@ const getAllUser = async ( req : Request, res : Response) => {
 };
 
 const updateUser = async ( req : Request, res : Response) => {
-    const error = validationResult(req);
-    if(!error.isEmpty()) 
-      return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST))
 
-      
     const { userId } = req.params;
+    // auth 미들웨어에서 해석한 토큰의 아이디와 현재 업데이트하려하는 토큰 아이디가 다를때
+    if(req.body.userId!=userId){
+        return res.status(sc.UNAUTHORIZED).send(fail(sc.UNAUTHORIZED,rm.DIFFERENT_USER))
+    }
+
     const userUpdateDto : UserUpdateDTO = req.body;
 
+    //이름을 고칠경우, response에서 유저이름은 "name"이라는 필드에 담겨서 옴으로 따로 dto에 넣어줌
     if(req.body?.name){
         userUpdateDto.userName=req.body?.name;
     }
 
+    //아무런 업데이트 정보가 없을경우
     if(!userUpdateDto.userName && !userUpdateDto.age && !userUpdateDto.email && !userUpdateDto.password){
         return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.NO_UPDATE_CONTENT));
     }
 
+    if(userUpdateDto.password && userUpdateDto.password?.length<6)
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));
+    
     try{
         const updatedUser = await userService.updateUser(+userId, userUpdateDto);
         if(!updatedUser){
@@ -115,6 +125,10 @@ const updateUser = async ( req : Request, res : Response) => {
 
 const deleteUser = async ( req : Request, res : Response) => {
     const { userId } = req.params;
+    // auth 미들웨어에서 해석한 토큰의 아이디와 현재 업데이트하려하는 토큰 아이디가 다를때
+    if(req.body.userId!=userId){
+        return res.status(sc.UNAUTHORIZED).send(fail(sc.UNAUTHORIZED,rm.DIFFERENT_USER))
+    }
 
    await userService.deleteUser(+userId);
     

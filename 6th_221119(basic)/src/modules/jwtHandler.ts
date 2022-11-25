@@ -34,6 +34,7 @@ const verify = (token: string) => {
   return decoded;
 };
 
+
 export default {
   sign,
   verify,

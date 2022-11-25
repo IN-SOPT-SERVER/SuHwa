@@ -30,10 +30,12 @@ userRouter.get("/:userId", auth, userController.getUserById);
 
 
 //U
-userRouter.patch("/:userId", auth , [ body("password").isLength({min : 6}) ] ,userController.updateUser);
+//update를 하려면 해당 유저아이디로 로그인된 상태여야하니까
+userRouter.patch("/:userId", auth ,userController.updateUser);
 
 //D
-userRouter.delete("/:userId", userController.deleteUser);
+//delete를 하려면 해당 유저아이디로 로그인된 상태여야하니까
+userRouter.delete("/:userId", auth, userController.deleteUser);
 
 
 
