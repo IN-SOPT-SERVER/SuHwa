@@ -19,17 +19,11 @@ userRouter.post(
     ],
     userController.createUser
   );
-/*
-  [
-    body("email").notEmpty(),
-    body("email").isEmail(),
-    body("password").notEmpty(),
-    body("password").isLength({ min: 6 }),
-  ],
-*/
+
 //R
 //전체조회
-userRouter.get("/", userController.getAllUser);
+//전체 유저정보를 보려면 일단 해당 서비스의 회원이야 하니까
+userRouter.get("/", auth, userController.getAllUser);
 //한명씩 조회
 userRouter.get("/:userId", auth, userController.getUserById);
 
