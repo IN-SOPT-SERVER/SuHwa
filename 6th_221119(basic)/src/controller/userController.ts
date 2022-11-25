@@ -52,17 +52,12 @@ const getUserById = async ( req : Request, res : Response) => {
     const data = await userService.getUserById(+userId);
 
     if(!data){
-        return res.status(404).json({
-            status : 404,
-            message : "아이디를 가진 유저를 찾을 수 없음"
-        });
+        return res.status(sc.NOT_FOUND).send(fail(sc.NOT_FOUND,rm.READ_USER_FAIL));
+    
     }
     else{
-        return res.status(200).json({
-            status : 200,
-            message : `유저 ${userId}를 조회하는데 성공`,
-            data
-        });
+        return res.status(sc.OK).send(success(sc.OK,rm.READ_USER_SUCCESS,data));
+        
     }
 
     
@@ -72,11 +67,8 @@ const getUserById = async ( req : Request, res : Response) => {
 const getAllUser = async ( req : Request, res : Response) => {
     const data = await userService.getAllUser();
 
-    return res.status(200).json({
-        status : 200,
-        message : "유저 전체조회 성공",
-        data
-    });
+    return res.status(sc.OK).send(success(sc.OK,rm.READ_ALL_USERS_SUCCESS,data));
+    
 
 };
 
