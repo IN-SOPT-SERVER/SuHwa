@@ -1,5 +1,5 @@
+import { MediaCreateDTO, MediaUpdateDTO } from '../interface/MediaDTO';
 import { Request, Response } from "express";
-import { detailInter } from "../interface/detailInter";
 import { mediaService } from "../service";
 import { Prisma, PrismaClient } from "@prisma/client";
 
@@ -23,7 +23,7 @@ const createMedia = async (req : Request, res : Response) => {
 
     }
 
-    const mediaInfo : detailInter = {
+    const mediaCreateDto : MediaCreateDTO = {
         title : title,
         mediaInfo : {
             thumbnail : thumbnail,
@@ -41,7 +41,7 @@ const createMedia = async (req : Request, res : Response) => {
         }
     }
     
-    const createdMedia = await mediaService.createMedia( mediaInfo);
+    const createdMedia = await mediaService.createMedia( mediaCreateDto);
     //예외 2 : 같은 이름의 컨텐츠가 있음
 
     if (!createdMedia || createdMedia instanceof Prisma.PrismaClientKnownRequestError){
@@ -104,9 +104,7 @@ const getMediaDetail = async (req : Request, res : Response) => {
 
 const updateMedia = async (req : Request, res : Response) => {
     const { mediaId } = req.params;
-    const { thumbnail, length, 
-        quality, seriesNum, actors, createYear,
-        age, genre, character, summary} = req.body;
+    const mediaUpdateDto : MediaUpdateDTO = req.body;
     
     // 예외 1. 미디어 아이디 오류
     if (!mediaId || isNaN(+mediaId)){
@@ -115,25 +113,9 @@ const updateMedia = async (req : Request, res : Response) => {
             message : `${mediaId}는 유요한 아이디가 아닙니다.`
         })
     }
-    const mediaInfo : detailInter = {
-        title : "",
-        mediaInfo : {
-            thumbnail : thumbnail,
-            length : +length,
-            quality : quality,
-            seriesNum : +seriesNum,
-            age : +age
-        },
-        contentInfo : {
-            createYear : createYear,
-            actors : actors,
-            genre : genre,
-            character : character,
-            summary : summary
-            }
-        }
+
     
-    const updatedMedia= await mediaService.updateMedia(mediaInfo , +mediaId);
+    const updatedMedia= await mediaService.updateMedia(mediaUpdateDto , +mediaId);
 
     //예외2 : 해당 미디어 아이디의 데이터가 없는경우
     if (!updatedMedia || updatedMedia instanceof Prisma.PrismaClientKnownRequestError){

@@ -1,4 +1,4 @@
-export interface detailInter{
+export interface MediaCreateDTO{
     title: string,
     mediaInfo : {
         thumbnail ?: string,
@@ -19,3 +19,19 @@ export interface detailInter{
         isLike : boolean
     }
 }
+
+export interface MediaUpdateDTO{
+    title ?: string,
+    thumbnail ?: string,
+    length ?:number, 
+    quality ?: string,
+    seriesNum ?: number,
+    age ?: number,
+    createYear ?: number,
+    actors ?: string,
+    genre ?: string,
+    character ?: string,
+    summary ?: string,
+   
+}
+

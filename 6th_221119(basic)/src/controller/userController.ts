@@ -100,6 +100,7 @@ const updateUser = async ( req : Request, res : Response) => {
         return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.NO_UPDATE_CONTENT));
     }
 
+    //validator에서 유효성검사를 하려고했지만, password 필드가 없는경우마저도 그냥 error 처리해서 따로 해줌
     if(userUpdateDto.password && userUpdateDto.password?.length<6)
         return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));
     

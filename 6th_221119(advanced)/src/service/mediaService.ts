@@ -1,4 +1,4 @@
-import { detailInter } from "../interface/detailInter";
+import { MediaCreateDTO, MediaUpdateDTO } from "../interface/MediaDTO";
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -8,20 +8,20 @@ const prisma = new PrismaClient()
 //CRUD
 
 //C : 넷플릭에 미디어 컨텐츠 추가
-const createMedia = async ( mediaInfo : detailInter ) => {
+const createMedia = async ( mediaCreateDto : MediaCreateDTO ) => {
     const data = await prisma.media.create({
         data : {
-            title : mediaInfo.title,
-            thumbnail : mediaInfo.mediaInfo.thumbnail,
-            length : mediaInfo.mediaInfo.length,
-            quality : mediaInfo.mediaInfo.quality,
-            seriesNum : mediaInfo.mediaInfo.seriesNum,
-            age : mediaInfo.mediaInfo.age,
-            createYear : mediaInfo.contentInfo.createYear,
-            actors : mediaInfo.contentInfo.actors,
-            genre : mediaInfo.contentInfo.genre,
-            character : mediaInfo.contentInfo.character,
-            summary : mediaInfo.contentInfo.summary
+            title : mediaCreateDto.title,
+            thumbnail : mediaCreateDto.mediaInfo.thumbnail,
+            length : mediaCreateDto.mediaInfo.length,
+            quality : mediaCreateDto.mediaInfo.quality,
+            seriesNum : mediaCreateDto.mediaInfo.seriesNum,
+            age : mediaCreateDto.mediaInfo.age,
+            createYear : mediaCreateDto.contentInfo.createYear,
+            actors : mediaCreateDto.contentInfo.actors,
+            genre : mediaCreateDto.contentInfo.genre,
+            character : mediaCreateDto.contentInfo.character,
+            summary : mediaCreateDto.contentInfo.summary
             
         },
     }
@@ -62,22 +62,13 @@ const getMediaDetail = async (mediaId : number) => {
 }
 
 // U : 미디어 컨텐츠 정보 변경
-const updateMedia= async(mediaInfo : detailInter, mediaId : number)=>{
+const updateMedia= async(mediaUpdateDto : MediaUpdateDTO, mediaId : number)=>{
     const data = await prisma.media.update({
         where : {
             id : mediaId
         },
         data : {
-            thumbnail : mediaInfo.mediaInfo.thumbnail,
-            length : mediaInfo.mediaInfo.length,
-            quality : mediaInfo.mediaInfo.quality,
-            seriesNum : mediaInfo.mediaInfo.seriesNum,
-            age : mediaInfo.mediaInfo.age,
-            createYear : mediaInfo.contentInfo.createYear,
-            actors : mediaInfo.contentInfo.actors,
-            genre : mediaInfo.contentInfo.genre,
-            character : mediaInfo.contentInfo.character,
-            summary : mediaInfo.contentInfo.summary
+            ...mediaUpdateDto
         }
     })
     .catch(error => { return error});
