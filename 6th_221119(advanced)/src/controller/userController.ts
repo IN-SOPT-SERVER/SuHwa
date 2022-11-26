@@ -1,8 +1,8 @@
 import { UserLogInDTO } from './../interface/user/UserLonInDTO';
 import { success, fail } from '../constants/response';
-import { sc, rm, tokenType} from '../constants';
+import { sc, rm} from '../constants';
 import { validationResult } from 'express-validator';
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { UserCreateDTO} from '../interface/user/UserCreateDTO';
 import { userService } from '../service';
 import jwtHandler from '../modules/jwtHandler';
@@ -37,6 +37,8 @@ const createUser = async( req : Request, res : Response)=>{
 }
 
 const logInUser = async( req : Request, res : Response)=>{
+    console.log("로그인컨트롤러들ㄹ어롬?");
+    
     const error = validationResult(req);
     
     if (!error.isEmpty()) {
