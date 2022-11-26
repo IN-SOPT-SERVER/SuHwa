@@ -1,0 +1,39 @@
+{
+  "name": "seminar3-netflix(seminar4-advanced-assignment)",
+  "version": "1.0.0",
+  "description": "마수리남 넷플릭스 페이지를 설계",
+  "main": "index.js",
+  "author": "수화수화수화",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc && node dist"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/express": "^4.17.14",
+    "@types/express-validator": "^3.0.0",
+    "@types/jsonwebtoken": "^8.5.9",
+    "@types/node": "^18.11.2",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src",
+      ".env"
+    ],
+    "ext": "js,ts,json",
+    "ignore": [
+      "src/**/*.spec.ts"
+    ],
+    "exec": "ts-node  --transpile-only ./src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.6.1",
+    "bcryptjs": "^2.4.3",
+    "express-validator": "^6.14.2",
+    "jsonwebtoken": "^8.5.1",
+    "prisma": "^4.6.1"
+  }
+}
