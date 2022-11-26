@@ -9,7 +9,6 @@ import jwtHandler from '../modules/jwtHandler';
 
 
 const createUser = async( req : Request, res : Response)=>{
-    console.log("1");
     
     const error = validationResult(req);
 
@@ -37,7 +36,6 @@ const createUser = async( req : Request, res : Response)=>{
 }
 
 const logInUser = async( req : Request, res : Response)=>{
-    console.log("로그인컨트롤러들ㄹ어롬?");
     
     const error = validationResult(req);
     
