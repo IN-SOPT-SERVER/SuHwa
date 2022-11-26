@@ -1,9 +1,9 @@
-import { UserUpdateDTO } from './../interfaces/UserUpdateDTO';
+import { UserUpdateDTO } from '../interfaces/user/UserUpdateDTO';
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { sc } from "../constants";
-import { UserCreateDTO } from "../interfaces/UserCreateDTO";
-import { UserSignInDTO } from "../interfaces/UserSignInDTO";
+import { UserCreateDTO } from "../interfaces/user/UserCreateDTO";
+import { UserSignInDTO } from "../interfaces/user/UserSignInDTO";
 
 const prisma = new PrismaClient();
 
@@ -38,8 +38,11 @@ const getUserById = async (userId : number) => {
     return data;
 };
 
-const getAllUser = async () => {
-    const data = await prisma.user.findMany();
+const getAllUser = async (page : number, limit : number) => {
+    const data = await prisma.user.findMany({
+      skip: (page-1) *limit, //skip 몇개를 건너뛸건지
+      take : limit //몇개를 재한해서 가져올건지
+    });
     return data;
 };
 
@@ -100,13 +103,65 @@ const signIn = async (userSignInDto: UserSignInDTO) => {
     }
   };
 
+
+//* 이름으로 유저 검색(query)
+const searchUserByName=async(keyword : string, option : string)=>{
+
+  let data;
+
+  //? 유저 최신순
+  if( option ==='desc'){
+    data = await prisma.user.findMany({
+      where:{
+        userName:{
+          contains: keyword
+        }
+      },
+      orderBy:{
+        createdAt : 'desc'
+      }
+      
+    });// 유저네임에서 키워드를 포함하는 데이터를 싹다 가져옴  
+
+  }
+  else if( option ==="asc"){ //?유저 오래된순
+    data = await prisma.user.findMany({
+      where:{
+        userName:{
+          contains: keyword
+        }
+      },
+      orderBy:{
+        createdAt : 'asc'
+      }
+    });// 유저네임에서 키워드를 포함하는 데이터를 싹다 가져옴  
+
+  }
+  else if(option==="nameAsc"){ //이름 사전순
+    data = await prisma.user.findMany({
+      where:{
+        userName:{
+          contains: keyword
+        }
+      },
+      orderBy:{
+        userName : 'asc'
+      }
+    });
+  }
+
+  
+  return data;
+}
+
 const userService = {
     createUser,
     getUserById,
     getAllUser,
     updateUser,
     deleteUser,
-    signIn
+    signIn,
+    searchUserByName
 };
 
 export default userService;

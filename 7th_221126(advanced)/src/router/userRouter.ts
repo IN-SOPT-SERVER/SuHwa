@@ -15,7 +15,7 @@ userRouter.post(
         body("age").notEmpty,
         body("age").isNumeric,
         body("password").notEmpty(),
-    ],*/()=>{console.log("회원가입 라우터에 들어옴?");},
+    ]*/,
     userController.createUser
     );
 
@@ -28,9 +28,9 @@ userRouter.post(
     body("email").notEmpty(),
     body("email").isEmail,
     body("password").notEmpty()
-]
-,*/ ()=>{console.log("로그인 라우터에 들어옴?");}
-,userController.logInUser
+]*/
+, 
+userController.logInUser
 );
 
 

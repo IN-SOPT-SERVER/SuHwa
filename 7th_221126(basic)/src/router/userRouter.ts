@@ -24,6 +24,11 @@ userRouter.post(
 //전체조회
 //전체 유저정보를 보려면 일단 해당 서비스의 회원이야 하니까
 userRouter.get("/", auth, userController.getAllUser);
+
+//~ 이름으로 유저 검색 : ~GET api/user/search?keyword={}&option={}
+userRouter.get("/search",userController.searchUserByName);
+
+
 //한명씩 조회
 userRouter.get("/:userId", auth, userController.getUserById);
 
@@ -51,5 +56,6 @@ userRouter.post(
     userController.signInUser
   );
   
+
 
 export default userRouter; //router로 내보냄

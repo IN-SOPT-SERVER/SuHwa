@@ -1,11 +1,11 @@
-import { UserUpdateDTO } from './../interfaces/UserUpdateDTO';
+import { UserUpdateDTO } from '../interfaces/user/UserUpdateDTO';
 import { fail, success } from './../constants/response';
 import { Request, Response } from "express";
 import { userService } from "../service";
 import sc from "../constants/statusCode";
 import { validationResult } from "express-validator";
-import { UserCreateDTO } from "../interfaces/UserCreateDTO"; 
-import { UserSignInDTO } from '../interfaces/UserSignInDTO';
+import { UserCreateDTO } from "../interfaces/user/UserCreateDTO"; 
+import { UserSignInDTO } from '../interfaces/user/UserSignInDTO';
 import jwtHandler from '../modules/jwtHandler';
 import rm from "../constants/responseMessage";
 
@@ -65,7 +65,13 @@ const getUserById = async ( req : Request, res : Response) => {
 };
 
 const getAllUser = async ( req : Request, res : Response) => {
-    const data = await userService.getAllUser();
+    const {page, limit} = req.query;
+
+    if(!page || !limit){
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST));
+    }
+
+    const data = await userService.getAllUser(+page, +limit);
 
     return res.status(sc.OK).send(success(sc.OK,rm.READ_ALL_USERS_SUCCESS,data));
     
@@ -166,7 +172,26 @@ const signInUser = async (req: Request, res: Response) => {
     }
   };
 
+  //* GET ~/api/user?keyword=수화
+const searchUserByName = async(req: Request, res: Response)=>{
+    const { keyword, option } = req.query; //리퀘스트 쿼리에서 키워드를 꺼내올거다
 
+    if(!keyword){
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST));
+
+    }
+
+    const data = await userService.searchUserByName( keyword as string, option as string);
+
+    if(!data){
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.SEARCH_USER_FIAL));
+
+    }
+
+    return res.status(sc.OK).send(success(sc.OK,rm.SEARCH_USER_SUCCESS,data));
+
+
+}
 
 
 
@@ -176,7 +201,8 @@ const userController={
     getAllUser,
     updateUser,
     deleteUser,
-    signInUser
+    signInUser,
+    searchUserByName
 };
 
 export default userController;
