@@ -2,7 +2,7 @@ import { validationResult } from 'express-validator';
 import { MediaCreateDTO, MediaUpdateDTO } from '../interface/media/MediaDTO';
 import { Request, Response } from "express";
 import { mediaService } from "../service";
-import { sc, rm} from '../constants';
+import { sc, rm, sortOption} from '../constants';
 import { fail,success } from '../constants/response';
 import { Prisma } from '@prisma/client';
 import { dir } from 'console';
@@ -149,23 +149,32 @@ const deleteMedia = async (req : Request, res : Response) => {
 
 const searchMediaByTitle = async(req : Request, res : Response)=>{
     const {keyword, option, sortby } = req.query;
-
+    
     if(!keyword){
         return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST)); 
     }
 
+    //정렬 기준의 디폴트는 최신 등록순 
+    let mediaSortBy : string; 
+    let mediaSortOption : string;
+
+    if(!sortby) mediaSortBy='createdAt'
+    else if(sortby=='createdAt' || sortby == 'updatedAt' || sortby =='createYear') mediaSortBy=sortby; //올바른 정렬기준일때
+    else{
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_SORT_BY));
+    }
+
+    if(!option) mediaSortOption=sortOption.LATELY;
+    else if(option == sortOption.LATELY || option == sortOption.OLDLY) mediaSortOption=option;
+    else{
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_SORT_OPTION));
+    }
+
     try {
-        const searchedMedia = await mediaService.searchMediaByTitle(keyword as string, sortby as string, option as string);
+        const searchedMedia = await mediaService.searchMediaByTitle(keyword as string, mediaSortBy, mediaSortOption);
         
         if(!searchedMedia){
             return res.status(sc.NO_CONTENT).send(success(sc.NO_CONTENT,rm.SEARCH_NO_MEDIA));
-        }
-
-        if(searchedMedia==rm.INVALID_SORT_BY){
-            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_SORT_BY));
-        }
-        else if(searchedMedia==rm.INVALID_SORT_OPTION){
-            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_SORT_OPTION));
         }
         
         return res.status(sc.OK).send(success(sc.OK,rm.SEARCH_MEDIA_SUCCESS,searchedMedia));

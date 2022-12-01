@@ -96,17 +96,6 @@ const deleteMedia= async( mediaId:number )=>{
 const searchMediaByTitle = async( keyword : string, sortby : string, option : string)=>{
    
     try{
-        
-        //정렬 기준의 디폴트는 최신 등록순  
-        if(!sortby) sortby=='createdAt'
-        else if(sortby!='createdAt' && sortby != 'updatedAt' && sortby !='createYear'){
-            return rm.INVALID_SORT_OPTION;
-        }
-
-        if(!option) option==sortOption.LATELY;
-        else if(option != sortOption.LATELY && option != sortOption.OLDLY){
-            return rm.INVALID_SORT_BY;
-        }
 
         const data = await prisma.media.findMany({
             where:{
