@@ -73,7 +73,21 @@ const createMedia = async (req : Request, res : Response) => {
 //R
 // 전체 미디어 목록 조회
 const getAllMedia = async (req : Request, res : Response) => {
-    const mediaList = await mediaService.getAllMedia();
+    const {page, limit} = req.query;
+    //페이지네이션을 설정안하면 그냥 전체 가져오고, 설정하면 설정한대로 가져오기
+    if(page && limit){
+        if(isNaN(+page) || isNaN(+limit)){//만약 쿼리를 받았는데 둘중 하나라도 숫자가 아니면 올바르지못한 값
+            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_PAGINATION));
+        }
+    }
+
+    //둘중 하나만 존재할 경우
+    if((page&&!limit)||(!page&&limit)){
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_PAGINATION));
+    }
+
+    // page와 limit은 둘다 없거나, 둘다 존재시는 둘다 숫자
+    const mediaList = await mediaService.getAllMedia( +(page as any), +(limit as any));
 
     return res.status(sc.OK).send(success(sc.OK,rm.READ_MEDIA_SUCCESS,mediaList));
 

@@ -50,5 +50,9 @@ export default {
 
     //정렬
     INVALID_SORT_BY : "잘못된 정렬 기준입니다.",
-    INVALID_SORT_OPTION : "잘못된 정렬 옵션입니다."
+    INVALID_SORT_OPTION : "잘못된 정렬 옵션입니다.",
+
+    //페이지네이션
+    INVALID_PAGINATION : "잘못된 페이지 또는 페이지당 출력 개수입니다."
+
   };

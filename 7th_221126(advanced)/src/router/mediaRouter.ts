@@ -21,7 +21,7 @@ mediaRouter.post("/", auth, upload.single('thumbnail')
     body("summary","요약을 적어주세요.").notEmpty()
 ], mediaController.createMedia);
 //R
-// 전체 미디어 목록 조회
+// 전체 미디어 목록 조회 : 페이지네이션은 쿼리로 사용 ; ~GET media?page={}&limit={}
 mediaRouter.get("/", auth, mediaController.getAllMedia);
 
 // 미디어 목록 하나조회 - detail

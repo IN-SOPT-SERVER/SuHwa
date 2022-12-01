@@ -1,6 +1,7 @@
 import { MediaCreateDTO, MediaUpdateDTO } from "../interface/media/MediaDTO";
 import { PrismaClient } from '@prisma/client'
 import { sortOption, rm } from "../constants";
+import { isNumberObject } from "util/types";
 
 const prisma = new PrismaClient()
 
@@ -41,10 +42,19 @@ const createMedia = async ( mediaCreateDto : MediaCreateDTO ) => {
 
 //R
 // 전체 미디어 목록 조회
-const getAllMedia = async () => {
-    const data = await prisma.media.findMany();
+const getAllMedia = async ( page ?: number, limit ?: number) => { //Ts에서 인자에 ?가 붙으면 해당 매개변수가 없어도 실행가능
+   let data;
+    if(page && limit){
+        data = await prisma.media.findMany({
+            skip: (page-1) * limit,
+            take : limit
+        });
+    }
+    else{
+        data = await prisma.media.findMany();
+    }
     return data;
-//유저의 시청기록도 조회
+
 }
 
 // 미디어 목록 하나조회 - detail
