@@ -1,25 +1,45 @@
+import { validationResult } from 'express-validator';
 import { MediaCreateDTO, MediaUpdateDTO } from '../interface/media/MediaDTO';
 import { Request, Response } from "express";
 import { mediaService } from "../service";
 import { sc, rm} from '../constants';
 import { fail,success } from '../constants/response';
 import { Prisma } from '@prisma/client';
+import { dir } from 'console';
 //CRUD
 
 
 //C : 넷플릭에 미디어 컨텐츠 추가
 const createMedia = async (req : Request, res : Response) => {
-    const { title, thumbnail, length, 
+    
+
+    const error = validationResult(req);
+    //예외 1 : 필요한 정보(title, length, quality ~ summary)가 안들어왔을때
+
+    if(!error.isEmpty()){
+        console.log(error);
+        
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.BAD_REQUEST));
+    }
+
+    const imageFile : Express.MulterS3.File = req.file as Express.MulterS3.File;
+    let thumbnail : string;
+
+    if(!imageFile.location){
+        thumbnail="이미지가 준비되지 않았음"
+    }
+    else{
+        thumbnail = imageFile.location;
+
+    }
+    //console.log(thumbnail);
+    
+
+    const { title, length, 
         quality, seriesNum, actors, createYear,
         age, genre, character, summary} = req.body;
 
-    //예외 1 : 필요한 정보(title, length, quality ~ summary)가 안들어왔을때
-    if ( !title || !length || !quality 
-        || !seriesNum || ! actors || !createYear 
-        || !age || !genre || !character || !summary){
-            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.NULL_VALUE));
-
-    }
+    
 
     const mediaCreateDto : MediaCreateDTO = {
         title : title,
@@ -31,7 +51,7 @@ const createMedia = async (req : Request, res : Response) => {
             age : +age
         },
         contentInfo : {
-            createYear : createYear,
+            createYear : +createYear,
             actors : actors,
             genre : genre,
             character : character,
