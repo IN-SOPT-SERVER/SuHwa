@@ -27,6 +27,9 @@ export default {
     MEDIA_NOT_FOUND : "미디어가 존재하지 않습니다.",
     UPDATE_MEDIA_SUCCESS : "미디어 업데이트 성공",
     DELETE_MEDIA_SUCCESS : " 미디어 삭제 성공",
+    SEARCH_MEDIA_SUCCESS : "미디어 검색 성공",
+    SEARCH_MEDIA_FAIL : "미디어 검색 실패",
+    SEARCH_NO_MEDIA : "검색한 미디어가 없습니다.",
 
   
     // 토큰
@@ -43,6 +46,9 @@ export default {
     
     INVALID_PASSWORD: "잘못된 비밀번호입니다.",
     NO_UPDATE_CONTENT: "업데이트할 정보가 없습니다",
-    DIFFERENT_USER : "다른 유저입니다."
+    DIFFERENT_USER : "다른 유저입니다.",
 
+    //정렬
+    INVALID_SORT_BY : "잘못된 정렬 기준입니다.",
+    INVALID_SORT_OPTION : "잘못된 정렬 옵션입니다."
   };

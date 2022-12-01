@@ -33,7 +33,8 @@ mediaRouter.patch("/:mediaId", auth, mediaController.updateMedia);
 // D : 미디어 정보 삭제
 mediaRouter.delete("/:mediaId",auth, mediaController.deleteMedia);
 
-
+// 미디어 제목으로 검색 : 검색어와 옵션은 쿼리 사용 : ~GET media/search?keyword={}&sortby={}&option={}
+mediaRouter.get("/search",auth, mediaController.searchMediaByTitle);
 
 
 

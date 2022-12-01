@@ -147,12 +147,45 @@ const deleteMedia = async (req : Request, res : Response) => {
 
 }
 
+const searchMediaByTitle = async(req : Request, res : Response)=>{
+    const {keyword, option, sortby } = req.query;
+
+    if(!keyword){
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST, rm.BAD_REQUEST)); 
+    }
+
+    try {
+        const searchedMedia = await mediaService.searchMediaByTitle(keyword as string, sortby as string, option as string);
+        
+        if(!searchedMedia){
+            return res.status(sc.NO_CONTENT).send(success(sc.NO_CONTENT,rm.SEARCH_NO_MEDIA));
+        }
+
+        if(searchedMedia==rm.INVALID_SORT_BY){
+            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_SORT_BY));
+        }
+        else if(searchedMedia==rm.INVALID_SORT_OPTION){
+            return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.INVALID_SORT_OPTION));
+        }
+        
+        return res.status(sc.OK).send(success(sc.OK,rm.SEARCH_MEDIA_SUCCESS,searchedMedia));
+
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(sc.BAD_REQUEST).send(fail(sc.BAD_REQUEST,rm.SEARCH_MEDIA_FAIL));
+
+    }
+    
+}
+
 const mediaController={
     createMedia,
     getAllMedia,
     getMediaDetail,
     updateMedia,
-    deleteMedia
+    deleteMedia,
+    searchMediaByTitle
 
 };
 
