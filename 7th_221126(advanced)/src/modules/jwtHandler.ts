@@ -3,6 +3,7 @@
 // src/modules/jwtHandler.ts
 import jwt from "jsonwebtoken";
 import { tokenType } from "../constants";
+import config from "../config";
 
 //* 받아온 userId를 담는 access token 생성
 const sign = (userId: number) => {
@@ -11,7 +12,7 @@ const sign = (userId: number) => {
   };
 
   //sign 메소드는 첫인자 payload, 두번째 secretkey 세번째 option : 토큰의 유통기한
-  const accessToken = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: "2h" });
+  const accessToken = jwt.sign(payload, config.jwtSecret, { expiresIn: "2h" });
   return accessToken;
 };
 
@@ -20,7 +21,7 @@ const verify = (token: string) => {
   let decoded: string | jwt.JwtPayload;
 
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    decoded = jwt.verify(token, config.jwtSecret);
   } catch (error: any) {
     if (error.message === "jwt expired") {
       return tokenType.TOKEN_EXPIRED;
